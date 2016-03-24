@@ -47,13 +47,4 @@ if (omitends == 1)
 end
 
 Epochs = ThreshEpochs;
-
-
-
-
-    
-
-
-    
-    
-    
+end
