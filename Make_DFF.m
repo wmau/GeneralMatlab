@@ -1,4 +1,4 @@
-function [ output_args ] = Make_DFF(moviefile,outfile)
+function Make_DFF(moviefile,outfile)
 
 [~,XDim,YDim,NumFrames] = loadframe(moviefile,1);
 info = h5info(moviefile,'/Object');
@@ -10,18 +10,23 @@ display('determining averages');
 avgframe = zeros(XDim,YDim);
 
 for i = 1:NumFrames
-   [frame,Xdim,Ydim,NumFrames] = loadframe(moviefile,i); 
+   [frame,~,~,NumFrames] = loadframe(moviefile,i); 
    avgframe = avgframe+single(frame);
 end
 avgframe = avgframe./NumFrames;
 
 % make DFF
 display('calculating and saving DFF');
+p=ProgressBar(NumFrames);
 for i = 1:NumFrames
-    [frame,Xdim,Ydim,NumFrames] = loadframe(moviefile,i); 
+    frame = loadframe(moviefile,i); 
     newframe = (single(frame)-avgframe)./avgframe;
     h5write(outfile,'/Object',newframe,[1 1 i 1],[XDim YDim 1 1]);
+    
+    p.progress;
 end
+p.stop;
 
+end
 
 
